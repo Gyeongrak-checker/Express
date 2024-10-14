@@ -2,12 +2,10 @@ const express = require('express');
 const asyncMiddleware = require('../middlewere/asyncHandler');
 const router = express.Router();
 
-const marketService = require('../service/marketService')
+const auctionService = require('../service/auctionService');
 
-// 품목 코드 조회
 router.get('/', asyncMiddleware(async(req, res) => {
-    const responseData = await marketService.getProductCode(req.query);
-    res.json(responseData);
-}));
+    res.json(await auctionService.getAuctionList(req.query));
+}))
 
 module.exports = router;

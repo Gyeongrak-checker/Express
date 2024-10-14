@@ -8,6 +8,7 @@ dotenv.config();
 
 const markets = require('./routes/markets');
 const products = require('./routes/product');
+const auction = require('./routes/auction');
 
 const product = require('./modules/cron/product');
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 // 라우터 설정
 app.use('/markets', markets);
 app.use('/products', products);
+app.use('/auction', auction)
 
 // 데이터베이스 연결
 connect();

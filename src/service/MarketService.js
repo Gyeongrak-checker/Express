@@ -3,6 +3,7 @@ const { Market } = require('../database/schema/marketSchema');
 const { Products } = require('../database/schema/productSchema');
 const { Coporate } = require('../database/schema/coporateSchema');
 const coporateCron = require('../modules/cron/coporate');
+const p = require('../modules/cron/product')
 
 // 시장 코드 조회
 const getMarketCode = async () => {
@@ -43,7 +44,6 @@ const getMarketCode = async () => {
 // 품목 코드 조회
 const getProductCode = async ({ large = '00', mid = '00', small = '00' }) => {
     let pipeline = [];
-
     // 대분류 조회
     if (large === '00') {
         let match = {
@@ -90,13 +90,13 @@ const getProductCode = async ({ large = '00', mid = '00', small = '00' }) => {
     return products;
 };
 
-
+// 법인 조회
 const getCorporateCode = async() => {
     let corporates = await Coporate.find();
 
     if(corporates.length === 0) {
         await coporateCron.update();
-        corporates = await Products.find();
+        corporates = await Products.find(); 
     }
 
     return corporates;

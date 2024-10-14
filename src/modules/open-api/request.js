@@ -23,19 +23,6 @@ const getProductCode = async(pageNo) => {
     return response.data;
 }
 
-const getWholesaleMarketRealTime = async(pageNo, whsalCd, large, mid, small) => {
-    const response = await axios.get('/price/real.do', {
-        params: {
-            pageNo,
-            whsalCd,
-            largeCd: large,
-            midCd: mid,
-            smallCd: small
-        }
-    })
-
-    return response.data;
-}
 
 const getCorporateCode = async() => {
     const response = await axios('/code/cmp.do');
@@ -43,12 +30,22 @@ const getCorporateCode = async() => {
 }
 
 
-
+const getAuction = async(page, market) => {
+    const response = await axios.get('/price/real.do', {
+        params: {
+            pageNo: 1,
+            whsalCd: 370101,
+            // largeCd: large,
+            // midCd: mid,
+        }
+    })
+    return response.data.data;
+}
 
 
 module.exports = {
     getMarketCode,
     getProductCode,
     getCorporateCode,
-    getWholesaleMarketRealTime
+    getAuction
 };

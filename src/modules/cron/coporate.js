@@ -10,7 +10,6 @@ const update = async() => {
             name: e.codeName
         }
     }));
-    console.log(result)
     await Coporate.create(result);
 }
 

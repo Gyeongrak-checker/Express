@@ -10,6 +10,7 @@ router.get('/', asyncMiddleware(async(req, res) => {
     res.json(result);
 }));
 
+// 법인 코드 조회
 router.get('/corporate', asyncMiddleware(async(req, res) => {
     const result = await marketService.getCorporateCode();
     res.json(result);
