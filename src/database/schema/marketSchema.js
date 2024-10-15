@@ -7,7 +7,7 @@ const marketSchema = new Schema({
     createdAt: { type: Date, default: Date.now, expires: '1d' },
 });
 
-const Market = mongoose.model('Market', marketSchema);
+const Market = mongoose.model('Markets', marketSchema);
 
 module.exports = {
     Market,

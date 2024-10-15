@@ -7,7 +7,7 @@ const coporateSchema = new Schema({
     createdAt: { type: Date, default: Date.now, expires: '7d' },
 });
 
-const Coporate = mongoose.model('Coporate', coporateSchema);
+const Coporate = mongoose.model('Coporates', coporateSchema);
 
 module.exports = {
     Coporate,
