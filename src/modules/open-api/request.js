@@ -30,13 +30,13 @@ const getCorporateCode = async() => {
 }
 
 
-const getAuction = async(page, market) => {
+const getAuction = async(page, market, large, mid, small) => {
     const response = await axios.get('/price/real.do', {
         params: {
-            pageNo: 1,
-            whsalCd: 370101,
-            // largeCd: large,
-            // midCd: mid,
+            pageNo: page,
+            whsalCd: market,
+            largeCd: large,
+            midCd: mid,
         }
     })
     return response.data.data;
