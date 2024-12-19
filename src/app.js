@@ -10,7 +10,6 @@ const markets = require('./routes/markets');
 const products = require('./routes/product');
 const auction = require('./routes/auction');
 
-const product = require('./modules/cron/product');
 
 const app = express();
 
@@ -26,9 +25,6 @@ app.use('/auction', auction)
 
 // 데이터베이스 연결
 connect();
-
-// 스케줄러
-product.scheduleUpdate();
 
 // 404 처리 미들웨어
 app.use(function(req, res, next) {

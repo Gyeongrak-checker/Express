@@ -14,7 +14,6 @@ const getMarketCode = async () => {
 
 const getCorporateCode = async() => {
     const response = await axios('/code/cmp.do');
-    console.log(response);
     return response.data;
 }
 
