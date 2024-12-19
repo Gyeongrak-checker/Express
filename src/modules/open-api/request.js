@@ -12,6 +12,11 @@ const getMarketCode = async () => {
     return response.data;
 };
 
+const getCorporateCode = async() => {
+    const response = await axios('/code/cmp.do');
+    console.log(response);
+    return response.data;
+}
 
 const getProductCode = async(pageNo) => {
     const response = await axios.get('/code/good.do', {
@@ -24,10 +29,6 @@ const getProductCode = async(pageNo) => {
 }
 
 
-const getCorporateCode = async() => {
-    const response = await axios('/code/cmp.do');
-    return response.data;
-}
 
 
 const getAuction = async(page, market, large, mid, small) => {
