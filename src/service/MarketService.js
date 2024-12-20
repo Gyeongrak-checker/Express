@@ -5,7 +5,7 @@ const { Products } = require('../database/schema/productSchema');
 
 const etcCode = '990014';
 // 공공 데이터에서 시장 코드 조회
-const saveMarketCoporateCode = async () => {
+const saveCode = async () => {
     const marketPromise = openApi.getMarketCode();
     const coporatePromise = openApi.getCorporateCode();
 
@@ -20,7 +20,7 @@ const saveMarketCoporateCode = async () => {
         market.coporates = [];
         tmpMap.set(market.codeId, market);
     });
-    
+
     const etcMarket = {
         codeId: etcCode,
         codeName: '기타',
@@ -65,8 +65,14 @@ const saveMarketCoporateCode = async () => {
 };
 
 const getCode = async () => {
-   return await saveMarketCoporateCode();
+    const market = await Market.find();
+    if(market.length === 0) {
+        return await saveCode();
+    }
+    return market;
 }
+
+
 
 module.exports = {
     getCode
