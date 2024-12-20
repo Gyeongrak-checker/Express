@@ -29,11 +29,11 @@ const saveMarketCoporateCode = async () => {
 
     tmpMap.set(etcCode, etcMarket);
 
-    for(let coporate of coporateCodes) {
+    for (let coporate of coporateCodes) {
         const code = coporate.codeId.substring(0, 6);
         const market = tmpMap.get(code);
 
-        if(market === undefined) {
+        if (market === undefined) {
             const etc = tmpMap.get(etcCode);
             etc.coporates.push(coporate);
             tmpMap.set(etcCode, etc);
@@ -44,31 +44,30 @@ const saveMarketCoporateCode = async () => {
         tmpMap.set(code, market);
     }
 
-    return Array.from(tmpMap.values());
-}
+    // Map의 값을 배열로 변환
+    const markets = Array.from(tmpMap.values());
 
-// MongoDB가 가지고 있던 코드 조회
-const getMarketCorporateCodeByMongo = async () => {
+    // Market 데이터베이스에 저장
+    const marketDocs = markets.map(market => ({
+        name: market.codeName,
+        code: market.codeId,
+        comporate: market.coporates.map(cop => ({
+            code: cop.codeId,
+            name: cop.codeName
+        }))
+    }));
 
-}
+    // 기존 데이터 삭제 후 새로운 데이터 저장
+    await Market.deleteMany({});
+    await Market.insertMany(marketDocs);
 
-
-// 품목 코드 조회
-const getProductCode = async ({ large = '00', mid = '00', small = '00' }) => {
-
+    return marketDocs; // 저장된 데이터를 반환 (옵션)
 };
 
-// 법인 조회
-const getCorporateCode = async(marketCode) => {
-    return await saveMarketCoporateCode();
+const getCode = async () => {
+   return await saveMarketCoporateCode();
 }
-
-const getMarketCode = async () => {
-
-}
-
-
 
 module.exports = {
-    getCorporateCode
+    getCode
 }
