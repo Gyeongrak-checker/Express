@@ -1,6 +1,5 @@
 const openApi = require('../modules/open-api/request');
 const { Market } = require('../database/schema/marketSchema');
-const { Products } = require('../database/schema/productSchema');
 
 
 const etcCode = '990014';
