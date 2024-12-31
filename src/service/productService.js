@@ -4,17 +4,13 @@ const fs = require('fs');
 
 const productCount = 17553 / 1000 + 1;
 
-const save = async () => {
+const update = async () => {
      // 1. 데이터 요청
     let response =  [];
 
     for(let i = 1; i <= productCount; i++) {
         response.push(await openApi.getProductCode(i).then(res => res.data));
     }
- 
-
-    // let response = JSON.parse(fs.readFileSync('mock.json', 'utf8'));
-
 
      // 2. 데이터 정렬
     response = response
@@ -54,13 +50,12 @@ const toDocument = (array) => {
     return result;
 }
 
-const get = async ({large, mid, small}) => {
-   let products = await Products.find();
-   if(products.length === 0) {
-        await save();
-        products = await Products.find();
-   }
-   return products;
+const get = async () => {
+    if(!await Products.exists()) {
+        await update();
+    }
+
+    return await Products.find();
 }
 
 module.exports = {
