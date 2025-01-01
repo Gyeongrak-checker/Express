@@ -37,6 +37,7 @@ const getAuction = async(page, market, large, mid, small) => {
             whsalCd: market,
             largeCd: large,
             midCd: mid,
+            smallCd: small
         }
     })
     return response.data.data;
