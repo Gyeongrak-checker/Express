@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+// TODO: 스키마 구조 재설계
 
 const salesDataSchema = new Schema({
     price: {type: Number}, // 가격
