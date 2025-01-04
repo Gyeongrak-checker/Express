@@ -28,11 +28,18 @@ const getProductCode = async(pageNo) => {
 }
 
 
+const formatDateToYYYYMMDD = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
+}
 
 
 const getAuction = async(start, end, market, large, mid, small) => {
-    const response = await axios.get('http://211.237.50.150:7080/openapi/dda6429a2fffcb0495719f21b17e5f398a3800cff5f4ed800358d84c700ce416/json/Grid_20240625000000000654_1/1/10?SALEDATE=20250104&WHSALCD=110001&LARGE=06');
-    return response.data;
+    const now = formatDateToYYYYMMDD(new Date());
+    const response = await axios.get(`http://${process.env.PUBLIC_API_URL}/${start}/${end}?SALEDATE=${now}&WHSALCD=${market}&LARGE=${large}`);
+    return response.data.Grid_20240625000000000654_1.row;
 }
 
 
@@ -41,4 +48,4 @@ module.exports = {
     getProductCode,
     getCorporateCode,
     getAuction
-};
+};  

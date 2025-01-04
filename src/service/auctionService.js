@@ -1,10 +1,8 @@
-const { Products } = require("../database/schema/productSchema");
 const openApi = require("../modules/open-api/request")
 
-const get = async ({page, market, large, mid, small}) => {
-
-    // TODO: 로직 구현
-    return await openApi.getAuction(page, market, large, mid, small);
+const get = async ({start, end, market, large, mid, small}) => {
+    const response = await openApi.getAuction(start, end, market, large, mid, small);
+    console.log(response);
 }   
 
 module.exports = {
