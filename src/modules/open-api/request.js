@@ -38,8 +38,14 @@ const formatDateToYYYYMMDD = (date) => {
 
 const getAuction = async(start, end, market, large, mid, small) => {
     const now = formatDateToYYYYMMDD(new Date());
-    const response = await axios.get(`http://${process.env.PUBLIC_API_URL}/${start}/${end}?SALEDATE=${now}&WHSALCD=${market}&LARGE=${large}`);
+    console.log();
+    const response = await axios.get(`http://${process.env.PUBLIC_API_URL}/${start}/${end}?SALEDATE=${now}&WHSALCD=${market}${large ? '&LARGE=' + large : ''}${large ? '&MID=' + mid : ''}${large ? '&SMALL=' + small : ''}`);
+    if(response.data.result.code !== 'INFO-000') {
+        // 임시 예외 처리
+        return [];
+    }
     return response.data.Grid_20240625000000000654_1.row;
+    
 }
 
 
