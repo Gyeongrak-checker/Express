@@ -1,15 +1,18 @@
 const axios = require('axios');
 require('dotenv').config();
 
-axios.defaults.baseURL = process.env.AT_API_URL;
-axios.defaults.params = {
-    serviceKey : process.env.AT_API_KEY,
-    apiType : 'json'
-};
+axios.defaults.baseURL = `${process.env.API_URL}/${process.env.API_KEY}/json`
+
+const serviceCode = {
+    market: 'Grid_20240625000000000661_1',
+    product: 'Grid_20240626000000000668_1',
+    coporate: 'Grid_20240626000000000662_1',
+    auction: 'Grid_20240625000000000654_1'
+}
 
 const getMarketCode = async () => {
-    const response = await axios.get('/code/whsal.do');
-    return response.data;
+    const response = await axios.get(`/${serviceCode.market}/1/10`);
+    return response;
 };
 
 const getCorporateCode = async() => {
@@ -40,7 +43,10 @@ const getAuction = async(day, start, end, market, large, mid, small) => {
 }
 
 
+
+
 module.exports = {
+    serviceCode,
     getMarketCode,
     getProductCode,
     getCorporateCode,
