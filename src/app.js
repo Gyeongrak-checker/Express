@@ -10,6 +10,7 @@ const markets = require('./routes/markets');
 const products = require('./routes/product');
 const auction = require('./routes/auction');
 const {HttpStatusCode} = require("axios");
+const Exception = require('./exception/exception');
 
 
 const app = express();
@@ -41,7 +42,6 @@ app.use((err, req, res, next) => {
     });
   }
   
-
   console.error(err); // 예상치 못한 에러는 콘솔 로그 (실제로는 로그 시스템에 저장)
   res.status(HttpStatusCode.InternalServerError).json({
     code: HttpStatusCode.InternalServerError,

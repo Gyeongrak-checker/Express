@@ -8,9 +8,8 @@ router.get('/', async(req, res, next) => {
     try {
         const result = await marketService.getCode();
         res.json(result);
-
     } catch (e) {
-        next();
+        next(e);
     }
 });
 

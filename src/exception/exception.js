@@ -4,3 +4,5 @@ class Exception extends Error {
         this.httpCode = httpCode;
     }
 }
+
+module.exports = Exception;

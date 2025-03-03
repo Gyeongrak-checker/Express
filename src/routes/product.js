@@ -1,5 +1,4 @@
 const express = require('express');
-const asyncMiddleware = require('../middlewere/asyncHandler');
 const router = express.Router();
 
 const productService = require('../service/productService')
