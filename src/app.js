@@ -28,25 +28,32 @@ app.use('/auction', auction)
 // 데이터베이스 연결
 connect();
 
-// 404 처리 미들웨어
+
+// 404 핸들러 (모든 라우터 등록 이후에 위치)
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
-// 전역 에러 처리 미들웨어
+// 전역 에러 핸들러 (반드시 4개 인자)
 app.use((err, req, res, next) => {
-  if (err instanceof Exception) {
-    return res.status(err.httpCode).json({
-      code: err.httpCode,
-      message: err.message
+    if (err.status) {
+        if (err instanceof Exception) {
+          return res.status(err.status).json({
+           code: err.status,
+           message: err.message
+        });
+      }
+
+    }
+    console.error(err);
+    return res.status(err.status || HttpStatusCode.InternalServerError).json({
+        code: err.status || HttpStatusCode.InternalServerError,
+        message: err.message || "서버 오류 발생"
     });
-  }
-  
-  console.error(err); // 예상치 못한 에러는 콘솔 로그 (실제로는 로그 시스템에 저장)
-  res.status(HttpStatusCode.InternalServerError).json({
-    code: HttpStatusCode.InternalServerError,
-    message: "서버 오류 발생",
-  });
+
+
+
+
 });
 
 module.exports = app;
