@@ -9,6 +9,7 @@ dotenv.config();
 const markets = require('./routes/markets');
 const products = require('./routes/product');
 const auction = require('./routes/auction');
+const {HttpStatusCode} = require("axios");
 
 
 const app = express();
@@ -32,23 +33,19 @@ app.use(function(req, res, next) {
 });
 
 // 전역 에러 처리 미들웨어
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
+  if (err instanceof Exception) {
+    return res.status(err.httpCode).json({
+      code: err.httpCode,
+      message: err.message
+    });
+  }
   
-  console.log(err)
 
-  const statusCode = err.status || 500;
-
-  // 개발 환경에서만 에러 스택 표시
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // 에러 로깅
-  console.error(err.stack);
-
-  // 클라이언트에 에러 응답 전송
-  res.status(statusCode).json({
-    status: 'error',
-    message: err.message || 'Internal Server Error',
+  console.error(err); // 예상치 못한 에러는 콘솔 로그 (실제로는 로그 시스템에 저장)
+  res.status(HttpStatusCode.InternalServerError).json({
+    code: HttpStatusCode.InternalServerError,
+    message: "서버 오류 발생",
   });
 });
 
