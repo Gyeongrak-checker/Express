@@ -27,7 +27,7 @@ const getMarketCode = async (start) => {
 };
 
 const getCorporateCode = async(start) => {
-    const axiosResponse = await axios(`/${serviceCode.coporate}/${start}/${MAX_COUNT}`)
+    return await axios(`/${serviceCode.coporate}/${start}/${MAX_COUNT}`)
         .then(response => {
             checkReqeust(response, serviceCode.coporate)
             return response.data[serviceCode.coporate];
