@@ -36,15 +36,6 @@ app.use(function(req, res, next) {
 
 // 전역 에러 핸들러 (반드시 4개 인자)
 app.use((err, req, res, next) => {
-    if (err.status) {
-        if (err instanceof Exception) {
-          return res.status(err.status).json({
-           code: err.status,
-           message: err.message
-        });
-      }
-
-    }
     console.error(err);
     return res.status(err.status || HttpStatusCode.InternalServerError).json({
         code: err.status || HttpStatusCode.InternalServerError,
