@@ -9,10 +9,9 @@ const save = async () => {
    const [marketCode, coperateCode ]  =
         await Promise.all([getMarketCode(0), getCorporateCode(0)]);
 
+    marketCode.row.forEach((market => {
+        const coporates = coperateCode.row.filter(coperate => coperate.CODEID.substring(0, 5) === market.CODEID)
 
-
-    const result = marketCode.row.map((market => {
-        const coporates = coperateCode.row.map(coporate => {});
     }));
 
 }
