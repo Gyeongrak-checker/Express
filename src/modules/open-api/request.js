@@ -19,20 +19,18 @@ const AXIOS_ERROR = 'OPEN API 오류 발생';
 
 const getMarketCode = async (start) => {
     return await axios.get(`/${serviceCode.market}/${start}/${MAX_COUNT}`)
-        .then(response => {
-            checkReqeust(response, serviceCode.market)
-            return response.data[serviceCode.market];
-        })
-        .catch((e) => { throw new Exception(AXIOS_ERROR + ': 도매시장'); });
+        .then(response => checkReqeust(response, serviceCode.market))
+        .then(response => response[serviceCode.market])
+        .catch((e) => {
+            throw new Exception(AXIOS_ERROR + ': 도매시장');
+        });
 };
 
 const getCorporateCode = async(start) => {
     return await axios(`/${serviceCode.coporate}/${start}/${MAX_COUNT}`)
-        .then(response => {
-            checkReqeust(response, serviceCode.coporate)
-            return response.data[serviceCode.coporate];
-        })
-        .catch((e) => { throw new Exception(AXIOS_ERROR + ': 도매시장'); });
+        .then(response => checkReqeust(response, serviceCode.coporate))
+        .then(response =>  response[serviceCode.coporate])
+        .catch((e) => { throw new Exception(AXIOS_ERROR + ': 법인'); });
 
 }
 
@@ -42,14 +40,16 @@ const getProductCode = async(start, end) => {
 
 
 const getAuction = async(day, start, end, market, large, mid, small) => {
-    
+
 }
 
 // OpenAPI 요청 예외 처리
 const checkReqeust = (response, service) => {
+    console.log(response.data[service])
     if(!response.data[service] && response.data.result.code !== 'INFO-000') {
         throw new Exception(response.data.result.message, HttpStatusCode.InternalServerError);
     }
+    return response;
 }
 
 
@@ -60,4 +60,4 @@ module.exports = {
     getProductCode,
     getCorporateCode,
     getAuction
-};  
+};

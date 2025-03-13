@@ -9,10 +9,10 @@ const save = async () => {
    const [marketCode, coperateCode ]  =
         await Promise.all([getMarketCode(0), getCorporateCode(0)]);
 
+
+
     const result = marketCode.row.map((market => {
-        const coporates = coperateCode.row.map(coporate => {
-            
-        });
+        const coporates = coperateCode.row.map(coporate => {});
     }));
 
 }
