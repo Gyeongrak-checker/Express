@@ -4,27 +4,25 @@ const { Schema } = mongoose;
 // TODO: 스키마 구조 재설계
 
 const salesDataSchema = new Schema({
-    price: {type: Number}, // 가격
-    qty: {type: Number}, // 수량
-    std: {type: String}, // 규격
-    sbidtime: {type: Date} // 경락일시
-})
+    price: { type: Number }, // 가격
+    qty: { type: Number }, // 수량
+    std: { type: String }, // 규격
+    sbidtime: { type: Date }, // 경락일시
+});
 
 const auctionSchema = new Schema({
-    whsal: {type: Schema.Types.ObjectId, ref: 'Markets'},
-    cmp: {type: Schema.Types.ObjectId, ref: 'Coporates'},
-    product: {type: Schema.Types.ObjectId, ref: 'Products'},
+    whsal: { type: Schema.Types.ObjectId, ref: 'Markets' },
+    cmp: { type: Schema.Types.ObjectId, ref: 'Coporates' },
+    product: { type: Schema.Types.ObjectId, ref: 'Products' },
     salesData: [salesDataSchema],
     createdAt: { type: Date, default: Date.now, expires: '1d' },
 });
 
-
 const Auction = mongoose.model('Auction', auctionSchema);
 
 module.exports = {
-  Auction,
-}
-
+    Auction,
+};
 
 /**
 항목	코드/값	설명

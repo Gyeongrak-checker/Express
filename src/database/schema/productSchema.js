@@ -9,12 +9,12 @@ const smallSchema = new Schema({
 const midSchema = new Schema({
     name: { type: String },
     code: { type: String },
-    small: [smallSchema], 
+    small: [smallSchema],
 });
 
 const productSchema = new Schema({
-    name: {type: String},
-    code: {type: String},
+    name: { type: String },
+    code: { type: String },
     mid: [midSchema],
     createdAt: { type: Date, default: Date.now },
 });
