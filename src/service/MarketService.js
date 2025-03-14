@@ -5,7 +5,6 @@ const { getMarketCode, getCorporateCode } = require('../modules/open-api/request
 const save = async () => {
     const [marketCode, coperateCode] = await Promise.all([getMarketCode(0), getCorporateCode(0)]);
 
-    // TODO: 필요없는 값까지 들어오는 이슈 수정 필요
     const result = marketCode.row.map(market => {
         const corporates = [];
         coperateCode.row.forEach(corporate => {
@@ -19,13 +18,15 @@ const save = async () => {
         return {
             name: market.CODENAME,
             code: market.CODEID,
-            corporate: corporates,
+            comporate: corporates,
         };
     });
     await Market.insertMany(result);
 };
 
-const getCode = async () => {};
+const getCode = async () => {
+    return await Market.find();
+};
 
 module.exports = {
     save,
