@@ -1,5 +1,4 @@
 const { Market } = require('../database/schema/marketSchema');
-const Exception = require('../exception/exception');
 const { getMarketCode, getCorporateCode } = require('../modules/open-api/request');
 
 const save = async () => {

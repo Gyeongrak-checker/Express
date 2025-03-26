@@ -5,7 +5,7 @@ const productService = require('../service/productService');
 
 // 품목 코드 조회
 router.get('/', async (req, res) => {
-    const responseData = await productService.get();
+    const responseData = await productService.save(0);
     res.json(responseData);
 });
 

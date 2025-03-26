@@ -35,9 +35,10 @@ const getProductCode = async start => {
     const response = await axios(`${serviceCode.product}/${start}/${MAX_COUNT}`)
         .then(response => checkReqeust(response, serviceCode.product))
         .catch(e => {
+            console.error(e);
             throw new Exception(AXIOS_ERROR + ': 품목');
         });
-    console.log(response);
+    return response;
 };
 
 const getAuction = async (day, start, end, market, large, mid, small) => {};
@@ -45,6 +46,7 @@ const getAuction = async (day, start, end, market, large, mid, small) => {};
 // OpenAPI 요청 예외 처리
 const checkReqeust = (response, service) => {
     if (!response.data[service] && response.data.result.code !== 'INFO-000') {
+        console.log(response);
         throw new Exception(response.data.result.message, HttpStatusCode.InternalServerError);
     }
     return response.data[service];
