@@ -41,6 +41,16 @@ const getProductCode = async start => {
     return response;
 };
 
+const getProductTotal = async () => {
+    const response = await axios(`${serviceCode.product}/0/0`)
+        .then(response => response.data[serviceCode.product].totalCnt)
+        .catch(e => {
+            console.error(e);
+            throw new Exception(AXIOS_ERROR + ': 품목');
+        });
+    return response;
+};
+
 const getAuction = async (day, start, end, market, large, mid, small) => {};
 
 // OpenAPI 요청 예외 처리
@@ -53,9 +63,9 @@ const checkReqeust = (response, service) => {
 };
 
 module.exports = {
-    serviceCode,
     getMarketCode,
     getProductCode,
+    getProductTotal,
     getCorporateCode,
     getAuction,
 };

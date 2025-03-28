@@ -4,7 +4,7 @@ const Exception = require('../exception/exception');
 const { HttpStatusCode } = require('axios');
 
 // 데이터 변형
-const insert = async ({ totalCnt, startRow, endRow, result, row }) => {
+const insert = async ({ row }) => {
     // 중복 방지
     const existCheck = {
         large: new Set(),
@@ -38,7 +38,7 @@ const insert = async ({ totalCnt, startRow, endRow, result, row }) => {
         }
     });
 
-    let r = await Promise.all([
+    return await Promise.all([
         Large.insertMany(schemaResult.large),
         Mid.insertMany(schemaResult.mid),
         Product.insertMany(schemaResult.product),
@@ -46,20 +46,20 @@ const insert = async ({ totalCnt, startRow, endRow, result, row }) => {
         console.error(e);
         throw new Exception('품목 캐싱 실패', HttpStatusCode.InternalServerError);
     });
-
-    console.log(r);
 };
 
 const save = async () => {
     let start = 0;
-    while (true) {
+    let total = await openApi.getProductTotal();
+    while (start < total) {
         const response = await openApi.getProductCode(start).then(insert);
-        break;
+        start += response.endRow;
     }
 };
 
-const getCodes = async () => {};
+const getCodes = async (large, mid, product) => {};
 
 module.exports = {
     save,
+    getCodes,
 };
