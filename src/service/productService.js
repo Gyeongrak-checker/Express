@@ -4,14 +4,104 @@ const Exception = require('../exception/exception');
 
 // {
 //     "ROW_NUM": 1,
-//     "LARGE": "24",
-//     "MID": "03",
-//     "SMALL": "HR",
-//     "LARGENAME": "숙근류",
-//     "MIDNAME": "국화(스프레이)",
-//     "GOODNAME": "팟베",
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "53",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "벚나무",
 //     "GUBN": "Y"
 // },
+// {
+//     "ROW_NUM": 2,
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "54",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "히코리",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 3,
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "55",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "단풍나무",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 4,
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "56",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "마호가니",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 5,
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "57",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "참나무",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 6,
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "58",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "호도나무",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 7,
+//     "LARGE": "31",
+//     "MID": "02",
+//     "SMALL": "ZZ",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(일반용재)",
+//     "GOODNAME": "기타 활엽수",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 8,
+//     "LARGE": "31",
+//     "MID": "03",
+//     "SMALL": "00",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(1종구조재)",
+//     "GOODNAME": "제재목(1종구조재)",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 9,
+//     "LARGE": "31",
+//     "MID": "03",
+//     "SMALL": "01",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(1종구조재)",
+//     "GOODNAME": "낙엽송",
+//     "GUBN": "Y"
+// },
+// {
+//     "ROW_NUM": 10,
+//     "LARGE": "31",
+//     "MID": "03",
+//     "SMALL": "02",
+//     "LARGENAME": "목재류",
+//     "MIDNAME": "제재목(1종구조재)",
+//     "GOODNAME": "더글라스퍼",
+//     "GUBN": "Y"
+// }
 
 // 데이터 변형
 const toDocument = async ({ totalCnt, startRow, endRowl, result, row }) => {
@@ -35,24 +125,7 @@ const toDocument = async ({ totalCnt, startRow, endRowl, result, row }) => {
     ];
 
     row.forEach(data => {
-        if (!response) {
-            response.push({
-                code: data.LARGE,
-                name: data.LARGENAME,
-                mid: [
-                    {
-                        code: data.MID,
-                        name: data.MIDNAME,
-                        small: [
-                            {
-                                code: data.SMALL,
-                                name: data.GOODNAME,
-                            },
-                        ],
-                    },
-                ],
-            });
-        }
+        
     });
     return response;
 };
