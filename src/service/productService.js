@@ -1,142 +1,59 @@
 const openApi = require('../modules/open-api/request');
-const { Products } = require('../database/schema/productSchema');
+const { Large, Mid, Product } = require('../database/schema/productSchema');
 const Exception = require('../exception/exception');
-
-// {
-//     "ROW_NUM": 1,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "53",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "벚나무",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 2,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "54",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "히코리",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 3,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "55",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "단풍나무",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 4,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "56",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "마호가니",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 5,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "57",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "참나무",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 6,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "58",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "호도나무",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 7,
-//     "LARGE": "31",
-//     "MID": "02",
-//     "SMALL": "ZZ",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(일반용재)",
-//     "GOODNAME": "기타 활엽수",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 8,
-//     "LARGE": "31",
-//     "MID": "03",
-//     "SMALL": "00",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(1종구조재)",
-//     "GOODNAME": "제재목(1종구조재)",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 9,
-//     "LARGE": "31",
-//     "MID": "03",
-//     "SMALL": "01",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(1종구조재)",
-//     "GOODNAME": "낙엽송",
-//     "GUBN": "Y"
-// },
-// {
-//     "ROW_NUM": 10,
-//     "LARGE": "31",
-//     "MID": "03",
-//     "SMALL": "02",
-//     "LARGENAME": "목재류",
-//     "MIDNAME": "제재목(1종구조재)",
-//     "GOODNAME": "더글라스퍼",
-//     "GUBN": "Y"
-// }
+const { HttpStatusCode } = require('axios');
 
 // 데이터 변형
-const toDocument = async ({ totalCnt, startRow, endRowl, result, row }) => {
-    const response = [
-        // {
-        //     code: row[0].LARGE,
-        //     name: row[0].LARGENAME,
-        //     mids: [
-        //         {
-        //             code: row[0].MID,
-        //             name: row[0].MIDNAME,
-        //             small: [
-        //                 {
-        //                     code: row[0].SMALL,
-        //                     name: row[0].GOODNAME,
-        //                 },
-        //             ],
-        //         },
-        //     ],
-        // },
-    ];
+const insert = async ({ totalCnt, startRow, endRow, result, row }) => {
+    // 중복 방지
+    const existCheck = {
+        large: new Set(),
+        mid: new Set(),
+        product: new Set(),
+    };
 
-    row.forEach(data => {
-        
+    const schemaResult = {
+        large: [],
+        mid: [],
+        product: [],
+    };
+
+    row.forEach(e => {
+        const large = new Large({ code: e.LARGE, name: e.LARGENAME });
+        const mid = new Mid({ code: e.MID, name: e.MIDNAME, large: large._id });
+        const product = new Product({ code: e.SMALL, name: e.GOODNAME, mid: mid._id });
+
+        if (!existCheck.large.has(e.LARGE)) {
+            existCheck.large.add(e.LARGE);
+            schemaResult.large.push(large);
+        }
+
+        if (!existCheck.mid.has(e.MID)) {
+            existCheck.mid.add(e.MID);
+            schemaResult.mid.push(mid);
+        }
+        if (!existCheck.product.has(e.SMALL)) {
+            existCheck.product.add(product);
+            schemaResult.product.push(product);
+        }
     });
-    return response;
+
+    let r = await Promise.all([
+        Large.insertMany(schemaResult.large),
+        Mid.insertMany(schemaResult.mid),
+        Product.insertMany(schemaResult.product),
+    ]).catch(e => {
+        console.error(e);
+        throw new Exception('품목 캐싱 실패', HttpStatusCode.InternalServerError);
+    });
+
+    console.log(r);
 };
 
 const save = async () => {
     let start = 0;
     while (true) {
-        const response = await openApi
-            .getProductCode(start)
-            .then(toDocument)
-            .then(docs => Products.insertMany(docs));
+        const response = await openApi.getProductCode(start).then(insert);
         break;
     }
 };

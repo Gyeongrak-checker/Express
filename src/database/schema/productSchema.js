@@ -1,26 +1,32 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const smallSchema = new Schema({
-    name: { type: String },
-    code: { type: String },
-    parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Mid' },
+// Large Schema (최상위 카테고리)
+const largeSchema = new Schema({
+    name: { type: String, required: true },
+    code: { type: String, required: true },
 });
 
+// Mid Schema (Large를 참조)
 const midSchema = new Schema({
-    name: { type: String },
-    code: { type: String },
-    large: { type: mongoose.Schema.Types.ObjectId, ref: 'Large' },
+    name: { type: String, required: true },
+    code: { type: String, required: true },
+    large: { type: mongoose.Schema.Types.ObjectId, ref: 'Large', required: true },
 });
 
+// Product Schema (Mid을 참조)
 const productSchema = new Schema({
-    name: { type: String },
-    code: { type: String },
-    createdAt: { type: Date, default: Date.now },
+    name: { type: String, required: true },
+    code: { type: String, required: true },
+    mid: { type: mongoose.Schema.Types.ObjectId, ref: 'Mid', required: true }, // 제품이 Small에 속함
 });
 
-const Products = mongoose.model('Product', productSchema);
+const Large = mongoose.model('Large', largeSchema);
+const Mid = mongoose.model('Mid', midSchema);
+const Product = mongoose.model('Product', productSchema);
 
 module.exports = {
-    Products,
+    Large,
+    Mid,
+    Product,
 };
