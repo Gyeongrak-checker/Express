@@ -4,7 +4,7 @@ const Exception = require('../exception/exception');
 const { HttpStatusCode } = require('axios');
 
 // 데이터 변형
-const insert = async ({ row }) => {
+const insert = async row => {
     // 중복 방지
     const existCheck = {
         large: new Set(),
@@ -50,14 +50,18 @@ const insert = async ({ row }) => {
 
 const save = async () => {
     let start = 0;
+    let end = openApi.MAX_COUNT;
     let total = await openApi.getProductTotal();
-    while (start < total) {
-        const response = await openApi.getProductCode(start).then(insert);
-        start += response.endRow;
+    while (start <= total) {
+        const { row } = await openApi.getProductCode(start, end);
+        start += openApi.MAX_COUNT;
+        end += openApi.MAX_COUNT - 1;
+        await insert(row);
     }
 };
 
 const getCodes = async (large, mid) => {
+    await save();
     // 소분류
     if (large && mid) {
     }

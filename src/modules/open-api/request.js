@@ -31,8 +31,8 @@ const getCorporateCode = async start => {
         });
 };
 
-const getProductCode = async start => {
-    const response = await axios(`${serviceCode.product}/${start}/${MAX_COUNT}`)
+const getProductCode = async (start, end) => {
+    const response = await axios(`${serviceCode.product}/${start}/${end}`)
         .then(response => checkReqeust(response, serviceCode.product))
         .catch(e => {
             console.error(e);
@@ -63,6 +63,7 @@ const checkReqeust = (response, service) => {
 };
 
 module.exports = {
+    MAX_COUNT,
     getMarketCode,
     getProductCode,
     getProductTotal,
