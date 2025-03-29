@@ -11,15 +11,19 @@ const largeSchema = new Schema({
 const midSchema = new Schema({
     name: { type: String, required: true },
     code: { type: String, required: true },
-    large: { type: mongoose.Schema.Types.ObjectId, ref: 'Large', required: true },
+    large: { type: mongoose.Schema.Types.ObjectId, ref: 'Large' },
 });
 
 // Product Schema (Mid을 참조)
 const productSchema = new Schema({
     name: { type: String, required: true },
     code: { type: String, required: true },
-    mid: { type: mongoose.Schema.Types.ObjectId, ref: 'Mid', required: true }, // 제품이 Small에 속함
+    mid: { type: mongoose.Schema.Types.ObjectId, ref: 'Mid' },
 });
+
+largeSchema.index({ code: 1 });
+midSchema.index({ code: 1 });
+productSchema.index({ code: 1 });
 
 const Large = mongoose.model('Large', largeSchema);
 const Mid = mongoose.model('Mid', midSchema);
