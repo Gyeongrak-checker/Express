@@ -57,7 +57,18 @@ const save = async () => {
     }
 };
 
-const getCodes = async (large, mid, product) => {};
+const getCodes = async (large, mid) => {
+    // 소분류
+    if (large && mid) {
+    }
+
+    // 중분류
+    if (large) {
+    }
+
+    // 대분류
+    return await Large.find();
+};
 
 module.exports = {
     save,
