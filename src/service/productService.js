@@ -5,36 +5,22 @@ const { HttpStatusCode } = require('axios');
 
 // 데이터 변형
 const insert = async row => {
-    // 중복 방지
-    const existCheck = {
-        large: new Set(),
-        mid: new Set(),
-        product: new Set(),
-    };
-
     const schemaResult = {
         large: [],
         mid: [],
         product: [],
     };
 
+    let large = null;
+    let mid = null;
+
     row.forEach(e => {
-        const large = new Large({ code: e.LARGE, name: e.LARGENAME });
-        const mid = new Mid({ code: e.MID, name: e.MIDNAME, large: large._id });
-        const product = new Product({ code: e.SMALL, name: e.GOODNAME, mid: mid._id });
-
-        if (!existCheck.large.has(e.LARGE)) {
-            existCheck.large.add(e.LARGE);
-            schemaResult.large.push(large);
+        if (e.SMALL === '-') {
+            return;
         }
 
-        if (!existCheck.mid.has(e.MID)) {
-            existCheck.mid.add(e.MID);
-            schemaResult.mid.push(mid);
-        }
-        if (!existCheck.product.has(e.SMALL)) {
-            existCheck.product.add(product);
-            schemaResult.product.push(product);
+        if (e.LARGE !== lastLarge.code) {
+            large = new Large({ name: e.LARGE, code: e.LARGE });
         }
     });
 
@@ -55,13 +41,14 @@ const save = async () => {
     while (start <= total) {
         const { row } = await openApi.getProductCode(start, end);
         start += openApi.MAX_COUNT;
-        end += openApi.MAX_COUNT - 1;
+        end += openApi.MAX_COUNT;
         await insert(row);
     }
 };
 
 const getCodes = async (large, mid) => {
     await save();
+
     // 소분류
     if (large && mid) {
     }
