@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Exception = require('../../exception/exception');
 const { HttpStatusCode } = require('axios');
+const { Mid, Large } = require('../../database/schema/productSchema');
 require('dotenv').config();
 
 axios.defaults.baseURL = `${process.env.API_URL}/${process.env.API_KEY}/json`;
@@ -51,6 +52,22 @@ const getProductTotal = async () => {
     return response;
 };
 
+const upsertMid = async (code, name, largeCode) => {
+    let mid = await Mid.findOne({ code });
+    if (!mid) {
+        mid = await new Mid({ code, name, large: largeCode }).save();
+    }
+    return mid;
+};
+
+const upsertLarge = async (code, name) => {
+    let large = await Large.findOne({ code });
+    if (!large) {
+        large = await new Large({ code, name }).save();
+    }
+    return large;
+};
+
 const getAuction = async (day, start, end, market, large, mid, small) => {};
 
 // OpenAPI 요청 예외 처리
@@ -64,6 +81,8 @@ const checkReqeust = (response, service) => {
 
 module.exports = {
     MAX_COUNT,
+    upsertLarge,
+    upsertMid,
     getMarketCode,
     getProductCode,
     getProductTotal,

@@ -2,48 +2,36 @@ const openApi = require('../modules/open-api/request');
 const { Large, Mid, Product } = require('../database/schema/productSchema');
 const Exception = require('../exception/exception');
 const { HttpStatusCode } = require('axios');
-
-// 데이터 변형
-const insert = async row => {
-    const schemaResult = {
-        large: [],
-        mid: [],
-        product: [],
-    };
-
-    let large = null;
-    let mid = null;
-
-    row.forEach(e => {
-        if (e.SMALL === '-') {
-            return;
-        }
-
-        if (e.LARGE !== lastLarge.code) {
-            large = new Large({ name: e.LARGE, code: e.LARGE });
-        }
-    });
-
-    return await Promise.all([
-        Large.insertMany(schemaResult.large),
-        Mid.insertMany(schemaResult.mid),
-        Product.insertMany(schemaResult.product),
-    ]).catch(e => {
-        console.error(e);
-        throw new Exception('품목 캐싱 실패', HttpStatusCode.InternalServerError);
-    });
-};
+const pLimit = require('p-limit');
 
 const save = async () => {
     let start = 0;
     let end = openApi.MAX_COUNT;
-    let total = await openApi.getProductTotal();
+    const total = await openApi.getProductTotal();
+    const limit = pLimit(5);
+
+    const tasks = [];
+
     while (start <= total) {
         const { row } = await openApi.getProductCode(start, end);
         start += openApi.MAX_COUNT;
         end += openApi.MAX_COUNT;
-        await insert(row);
+
+        tasks.push(
+            limit(async () => {
+                try {
+                    for (const item of row) {
+                        const large = await openApi.upsertLarge(item.LARGE, item.LARGENAME);
+                        const mid = await openApi.upsertMid(item.MID, item.MIDNAME, large._id);
+                        await new Product({ code: item.SMALL, name: item.GOODNAME, mid: mid._id }).save();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }),
+        );
     }
+    await Promise.all(tasks);
 };
 
 const getCodes = async (large, mid) => {
