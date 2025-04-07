@@ -35,20 +35,48 @@ const save = async () => {
 };
 
 const getCodes = async (large, mid) => {
-    await save();
-
-    // 소분류
+    // 소분류: large, mid 둘 다 있을 때
     if (large && mid) {
+        const products = await Product.find().populate({
+            path: 'mid',
+            match: { code: mid },
+            populate: {
+                path: 'large',
+                match: { code: large },
+            },
+        });
+
+        // mid 또는 large 조건에 맞지 않아 걸러진 항목은 제외
+        const filtered = products.filter(p => p.mid && p.mid.large);
+
+        return filtered.map(res => ({
+            name: res.name,
+            code: res.code,
+        }));
     }
 
-    // 중분류
+    // 중분류: large만 있을 때
     if (large) {
+        const mids = await Mid.find().populate({
+            path: 'large',
+            match: { code: large },
+        });
+
+        const filtered = mids.filter(m => m.large);
+
+        return filtered.map(res => ({
+            name: res.name,
+            code: res.code,
+        }));
     }
 
-    // 대분류
-    return await Large.find();
+    // 대분류만 조회
+    const larges = await Large.find();
+    return larges.map(res => ({
+        name: res.name,
+        code: res.code,
+    }));
 };
-
 module.exports = {
     save,
     getCodes,
